@@ -28,8 +28,8 @@ func newModel(width, height int) model {
 		color := colors[rand.Intn(len(colors))]
 		particle.SetColor(color)
 		particle.SetRadius(5)
-		x := rand.Float64() * float64(rand.Intn(width))
-		y := rand.Float64() * float64(rand.Intn(height))
+		x := float64(rand.Intn(width))
+		y := float64(rand.Intn(height))
 		particle.SetPosition(asciiphysics.Vector{X: x, Y: y})
 		canvas.AddCircle(particle)
 	}
