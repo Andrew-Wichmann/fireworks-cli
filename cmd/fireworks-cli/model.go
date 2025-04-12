@@ -5,8 +5,8 @@ import (
 	"math/rand"
 
 	"github.com/Andrew-Wichmann/fireworks-cli/pkg/asciiphysics"
+	"github.com/Andrew-Wichmann/fireworks-cli/pkg/firework"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 )
 
 type state int
@@ -15,27 +15,19 @@ const INIT state = 0
 const RUNNING state = 1
 
 type model struct {
-	state  state
-	canvas asciiphysics.Canvas
+	state     state
+	canvas    asciiphysics.Canvas
+	fireworks []firework.Model
 }
-
-var colors []lipgloss.TerminalColor = []lipgloss.TerminalColor{lipgloss.Color("#990000"), lipgloss.Color("#660000"), lipgloss.Color("#662200"), lipgloss.Color("#ff0000"), lipgloss.Color("#ff3300"), lipgloss.Color("#883300")}
 
 func newModel(width, height int) model {
 	canvas := asciiphysics.NewCanvas(width, height)
-	particles := make([]asciiphysics.Circle, 50)
-	for _, particle := range particles {
-		color := colors[rand.Intn(len(colors))]
-		particle.SetColor(color)
-		particle.SetRadius(5)
-		dx := -2.0 + rand.Float64()*4.0
-		dy := -2.0 + rand.Float64()*4.0
-		particle.SetVelocity(asciiphysics.Vector{X: dx, Y: dy})
-		particle.SetAcceleration(asciiphysics.Vector{X: 0.0, Y: .1})
-		x := float64(rand.Intn(width))
-		y := float64(rand.Intn(height))
-		particle.SetPosition(asciiphysics.Vector{X: x, Y: y})
-		canvas.AddCircle(particle)
+	for range 10 {
+		x := float64(width) * rand.Float64()
+		y := float64(height) * rand.Float64()
+		loc := asciiphysics.Vector{x, y}
+		f := firework.New(firework.ShortFuse, firework.ShortFuse, loc, firework.RandomColor())
+		canvas.AddDrawable(f)
 	}
 	return model{
 		canvas: canvas,

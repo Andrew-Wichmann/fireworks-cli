@@ -14,6 +14,10 @@ const (
 )
 
 type canvasTick struct{}
+type Drawable interface {
+	Tick() Drawable
+	Draw(*gg.Context)
+}
 
 func newTick() tea.Cmd {
 	return tea.Tick(time.Second/fps, func(time.Time) tea.Msg {
@@ -22,7 +26,7 @@ func newTick() tea.Cmd {
 }
 
 type Canvas struct {
-	circles        []Circle
+	drawable       []Drawable
 	width, height  int
 	asciiConverter *convert.ImageConverter
 }
@@ -43,20 +47,20 @@ func (c Canvas) Init() tea.Cmd {
 func (c Canvas) View() string {
 	i := image.NewRGBA(image.Rect(0, 0, c.width, c.height))
 	ctx := gg.NewContextForImage(i)
-	for _, circle := range c.circles {
-		circle.draw(ctx)
+	for _, drawable := range c.drawable {
+		drawable.Draw(ctx)
 	}
 	return c.asciiConverter.Image2ASCIIString(ctx.Image(), &convert.DefaultOptions)
 }
 
-func (c *Canvas) AddCircle(circle Circle) {
-	c.circles = append(c.circles, circle)
+func (c *Canvas) AddDrawable(drawable Drawable) {
+	c.drawable = append(c.drawable, drawable)
 }
 
 func (c Canvas) Update(msg tea.Msg) (Canvas, tea.Cmd) {
 	if _, ok := msg.(canvasTick); ok {
-		for i, circle := range c.circles {
-			c.circles[i] = circle.update()
+		for i, circle := range c.drawable {
+			c.drawable[i] = circle.Tick()
 		}
 		return c, newTick()
 	}

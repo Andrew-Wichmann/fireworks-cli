@@ -38,7 +38,7 @@ func (c *Circle) SetPosition(v Vector) bool {
 	return true
 }
 
-func (c Circle) update() Circle {
+func (c Circle) Tick() Circle {
 	x := c.position.X + c.velocity.X
 	y := c.position.Y + c.velocity.Y
 	c.position = Vector{X: x, Y: y}
@@ -49,7 +49,7 @@ func (c Circle) update() Circle {
 	return c
 }
 
-func (c Circle) draw(ctx *gg.Context) {
+func (c Circle) Draw(ctx *gg.Context) {
 	ctx.Push()
 	defer ctx.Pop()
 	ctx.SetColor(c.color)
