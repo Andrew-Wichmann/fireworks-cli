@@ -9,10 +9,14 @@ import (
 	"github.com/qeesung/image2ascii/convert"
 )
 
+const (
+	fps = 60
+)
+
 type canvasTick struct{}
 
 func newTick() tea.Cmd {
-	return tea.Tick(time.Millisecond*100, func(time.Time) tea.Msg {
+	return tea.Tick(time.Second/fps, func(time.Time) tea.Msg {
 		return canvasTick{}
 	})
 }
