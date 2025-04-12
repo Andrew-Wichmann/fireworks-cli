@@ -28,6 +28,10 @@ func newModel(width, height int) model {
 		color := colors[rand.Intn(len(colors))]
 		particle.SetColor(color)
 		particle.SetRadius(5)
+		dx := -2.0 + rand.Float64()*4.0
+		dy := -2.0 + rand.Float64()*4.0
+		particle.SetVelocity(asciiphysics.Vector{X: dx, Y: dy})
+		particle.SetAcceleration(asciiphysics.Vector{X: 0.0, Y: .1})
 		x := float64(rand.Intn(width))
 		y := float64(rand.Intn(height))
 		particle.SetPosition(asciiphysics.Vector{X: x, Y: y})

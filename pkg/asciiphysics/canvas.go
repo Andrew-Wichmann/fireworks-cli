@@ -2,23 +2,21 @@ package asciiphysics
 
 import (
 	"image"
+	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/fogleman/gg"
 	"github.com/qeesung/image2ascii/convert"
 )
 
-type Vector struct {
-	X, Y float64
+type canvasTick struct{}
+
+func newTick() tea.Cmd {
+	return tea.Tick(time.Millisecond*100, func(time.Time) tea.Msg {
+		return canvasTick{}
+	})
 }
-type Circle struct {
-	color        lipgloss.TerminalColor
-	radius       float64
-	position     Vector
-	velocity     Vector
-	acceleration Vector
-}
+
 type Canvas struct {
 	circles        []Circle
 	width, height  int
@@ -35,7 +33,7 @@ func NewCanvas(width, height int) Canvas {
 }
 
 func (c Canvas) Init() tea.Cmd {
-	return nil
+	return newTick()
 }
 
 func (c Canvas) View() string {
@@ -52,38 +50,11 @@ func (c *Canvas) AddCircle(circle Circle) {
 }
 
 func (c Canvas) Update(msg tea.Msg) (Canvas, tea.Cmd) {
+	if _, ok := msg.(canvasTick); ok {
+		for i, circle := range c.circles {
+			c.circles[i] = circle.update()
+		}
+		return c, newTick()
+	}
 	return c, nil
-}
-
-func (c *Circle) SetColor(color lipgloss.TerminalColor) bool {
-	c.color = color
-	return true
-}
-
-func (c *Circle) SetRadius(radius float64) bool {
-	c.radius = radius
-	return true
-}
-
-func (c *Circle) SetAcceleration(v Vector) bool {
-	c.acceleration = v
-	return true
-}
-
-func (c *Circle) SetVelocity(v Vector) bool {
-	c.velocity = v
-	return true
-}
-
-func (c *Circle) SetPosition(v Vector) bool {
-	c.position = v
-	return true
-}
-
-func (c Circle) draw(ctx *gg.Context) {
-	ctx.Push()
-	defer ctx.Pop()
-	ctx.SetColor(c.color)
-	ctx.DrawCircle(c.position.X, c.position.Y, c.radius)
-	ctx.Fill()
 }
