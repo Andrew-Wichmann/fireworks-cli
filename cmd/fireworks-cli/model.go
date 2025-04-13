@@ -22,11 +22,25 @@ type model struct {
 
 func newModel(width, height int) model {
 	canvas := asciiphysics.NewCanvas(width, height)
-	for range 10 {
+	for range 3 {
 		x := float64(width) * rand.Float64()
 		y := float64(height) * rand.Float64()
 		loc := asciiphysics.Vector{x, y}
-		f := firework.New(loc)
+		f := firework.New(loc, firework.WithColor(firework.Red))
+		canvas.AddDrawable(f)
+	}
+	for range 3 {
+		x := float64(width) * rand.Float64()
+		y := float64(height) * rand.Float64()
+		loc := asciiphysics.Vector{x, y}
+		f := firework.New(loc, firework.WithColor(firework.Blue))
+		canvas.AddDrawable(f)
+	}
+	for range 3 {
+		x := float64(width) * rand.Float64()
+		y := float64(height) * rand.Float64()
+		loc := asciiphysics.Vector{x, y}
+		f := firework.New(loc, firework.WithColor(firework.Green))
 		canvas.AddDrawable(f)
 	}
 	return model{
