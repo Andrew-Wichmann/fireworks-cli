@@ -26,7 +26,7 @@ func newModel(width, height int) model {
 		x := float64(width) * rand.Float64()
 		y := float64(height) * rand.Float64()
 		loc := asciiphysics.Vector{x, y}
-		f := firework.New(firework.ShortFuse, firework.ShortFuse, loc, firework.RandomColor())
+		f := firework.New(loc)
 		canvas.AddDrawable(f)
 	}
 	return model{
